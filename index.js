@@ -2,7 +2,7 @@ import dogs from "./data.js"
 
 
 
-let dogsNames = ["Rex",'Bella','Teddy']
+let dogsNames = Object.keys(dogs);
 const likeBtn = document.getElementById("likeBtn")
 const passBtn = document.getElementById("crossBtn")
 let profile = document.getElementById("profile")
@@ -12,7 +12,7 @@ class ProfileData {
         Object.assign(this, data)
     }
 
-    renderProfile(){
+    renderProfile() {
         const {name,avatar,age,bio} = this
         return (
             `
@@ -24,7 +24,7 @@ class ProfileData {
             `)
     }
 
-    likeRender(){
+    renderLike() {
         profile.innerHTML += 
              `<div class = "stampContainer" >
                 <p class = "likeStamp">LIKE</p>
@@ -33,7 +33,7 @@ class ProfileData {
 
      
 
-    passRender(){
+    renderPass() {
         profile.innerHTML += 
              `<div class = "stampContainer">
                 <p class = "passStamp">NOPE</p>
@@ -41,15 +41,15 @@ class ProfileData {
     }
 }
 let doggy = {}
+let index = 0;
 
 function getNewDoggy(){
-    const nextDoggy = dogs[dogsNames.shift()]
+    const nextDoggy = dogs[dogsNames[index % dogsNames.length]];
+    index++;
     console.log(nextDoggy) 
-    doggy = nextDoggy ? new ProfileData(nextDoggy) : {}
-    profile.innerHTML = doggy.renderProfile()
-    console.log(dogsNames.length)
-    if(dogsNames.length === 0){
-        dogsNames = ["Rex",'Bella','Teddy']
+    if (nextDoggy) { 
+        doggy = new ProfileData(nextDoggy);
+        profile.innerHTML = doggy.renderProfile();
     }
 }
 
@@ -58,22 +58,18 @@ getNewDoggy()
 
 likeBtn.addEventListener("click", () => { 
     doggy.hasBeenLiked = true
-    if (doggy.hasBeenLiked){
-        doggy.likeRender()
-        setTimeout(() =>{
-            getNewDoggy()
-        },2000)
+    if (doggy.hasBeenLiked) {
+        doggy.likeRender();
+        setTimeout(() => getNewDoggy(), 2000);
     }
     
 
 } )
 passBtn.addEventListener("click", () =>{
     doggy.hasBeenSwiped = true
-    if (doggy.hasBeenSwiped){
-        doggy.passRender()
-        setTimeout(() =>{
-            getNewDoggy()
-        },2000)
+    if (doggy.hasBeenSwiped) {
+        doggy.passRender();
+        setTimeout(() => getNewDoggy(), 2000);
     }
     
 } )
